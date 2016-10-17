@@ -48,7 +48,7 @@ public class DummyFrag1 extends Fragment {
 
         pg.open();
 
-        b1.setOnClickListener(new View.OnClickListener() {
+       /* b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int rent = Integer.parseInt(ed1.getText().toString());
@@ -57,7 +57,7 @@ public class DummyFrag1 extends Fragment {
                 String contact = ed4.getText().toString();
                 String desc = ed5.getText().toString();
 
-                pg.insertPgDetails(rent, area, pgname, contact, desc);
+                //pg.insertPgDetails(rent, area, pgname, contact, desc);
 
             }
         });
@@ -66,7 +66,7 @@ public class DummyFrag1 extends Fragment {
             @Override
             public void onClick(View v) {
 
-                ArrayList<String> data = pg.readPGdetails();
+                //ArrayList<String> data = pg.readPGdetails();
                 Toast.makeText(getActivity(), "Frag1", Toast.LENGTH_SHORT).show();
                 SearchPG searchPG = new SearchPG();
                 Bundle b = new Bundle();
@@ -79,7 +79,7 @@ public class DummyFrag1 extends Fragment {
                 fragmentTransaction.commit();
             }
         });
-
+*/
         return v;
     }
 

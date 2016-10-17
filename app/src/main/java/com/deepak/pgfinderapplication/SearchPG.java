@@ -1,8 +1,10 @@
 package com.deepak.pgfinderapplication;
 
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,15 +24,10 @@ import java.util.ArrayList;
  */
 public class SearchPG extends Fragment {
     ListView listView1;
-    ArrayList<String> arrayList1;
-    MyAdapter myAdapter;
-    ArrayList<Integer> rent = new ArrayList<Integer>();
-    ArrayList<String> area = new ArrayList<String>();
-    ArrayList<String> pgname = new ArrayList<String>();
-    ArrayList<String> contact = new ArrayList<String>();
-    ArrayList<String> desc = new ArrayList<String>();
+    Cursor cursor;
+    SimpleCursorAdapter simpleCursorAdapter;
+    PGDatabase pgDatabase;
 
-    PGDatabase pg;
 
     public SearchPG() {
         // Required empty public constructor
@@ -43,28 +40,19 @@ public class SearchPG extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_pg, container, false);
         listView1 = (ListView) view.findViewById(R.id.listView1);
-        arrayList1 = new ArrayList<String>();
-        myAdapter = new MyAdapter();
-        listView1.setAdapter(myAdapter);
 
-        Toast.makeText(getActivity(), "SearchPage", Toast.LENGTH_SHORT).show();
-
-        Bundle b = getArguments();
-        arrayList1 = b.getStringArrayList("data");
-        //arrayList1 = pgdata;
-        for(String item : arrayList1){
-            String[] parts = item.split("/");
-            rent.add(Integer.parseInt(parts[0]));
-            area.add(parts[1]);
-            pgname.add(parts[2]);
-            contact.add(parts[3]);
-            desc.add(parts[4]);
-        }
+        pgDatabase = new PGDatabase(getActivity());
+        pgDatabase.open();
+        cursor = pgDatabase.queryPGDetails();
+        simpleCursorAdapter = new SimpleCursorAdapter(getActivity(), R.layout.row, cursor,
+                    new String[]{ "advertisername","pgcity", "pgname", "contact", "pgrent"},
+                    new int[]{R.id.advertisername, R.id.contact, R.id.city, R.id.pgName, R.id.rent});
+        listView1.setAdapter(simpleCursorAdapter);
 
         return view;
     }
 
-    private class MyAdapter extends BaseAdapter{
+    /*private class MyAdapter extends BaseAdapter{
         @Override
         public int getCount() {
             return arrayList1.size();
@@ -82,11 +70,6 @@ public class SearchPG extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            int rent2 = rent.get(position);
-            String area2 = area.get(position);
-            String pgname2 = pgname.get(position);
-            String contact2 = contact.get(position);
-            String desc2 = desc.get(position);
 
             View v = getActivity().getLayoutInflater().inflate(R.layout.row, null);
 
@@ -101,13 +84,8 @@ public class SearchPG extends Fragment {
             desc1.setMovementMethod(new ScrollingMovementMethod());
 
             Toast.makeText(getActivity(), "Setting textView", Toast.LENGTH_SHORT).show();
-            rent1.setText("\u20B9 "+rent2);
-            area1.setText(area2);
-            pgName1.setText(pgname2);
-            contact1.setText(contact2);
-            desc1.setText(desc2);
 
             return v;
         }
-    }
+    }*/
 }

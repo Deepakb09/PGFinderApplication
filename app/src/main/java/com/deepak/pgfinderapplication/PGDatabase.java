@@ -3,6 +3,7 @@ package com.deepak.pgfinderapplication;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
@@ -24,41 +25,36 @@ public class PGDatabase {
         sqLiteDatabase = myHelper.getWritableDatabase();
     }
 
-    public void insertPgDetails(int rent, String area, String name, String contact, String desc){
+    public void insertPgDetails(String advertisername, String pgname, float contact, String pgcity, String pgarea, int pgrent,
+                                String negotiable, String gender, String typeoffood, String moredetails, String dateofposting,
+                                int image1, int image2, String latitude, String longitude){
         ContentValues contentValues = new ContentValues();
-        contentValues.put("pgrent", rent);
-        contentValues.put("pgarea", area);
-        contentValues.put("pgname", name);
-        contentValues.put("pgcontact", contact);
-        contentValues.put("pgdesc", desc);
-        sqLiteDatabase.insert("pgdetails", null, contentValues);
+        contentValues.put("advertisername", advertisername);
+        contentValues.put("pgname", pgname);
+        contentValues.put("contact", contact);
+        contentValues.put("pgcity", pgcity);
+        contentValues.put("pgarea", pgarea);
+        contentValues.put("pgrent", pgrent);
+        contentValues.put("negotiable", negotiable);
+        contentValues.put("gender", gender);
+        contentValues.put("typeoffood", typeoffood);
+        contentValues.put("moredetails", moredetails);
+        contentValues.put("dateofposting", dateofposting);
+        contentValues.put("image1", image1);
+        contentValues.put("image2", image2);
+        contentValues.put("latitude", latitude);
+        contentValues.put("longitude", longitude);
+        try {
+            sqLiteDatabase.insert("pgdetails", null, contentValues);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
-    public ArrayList<String> readPGdetails(){
-        String tableName = "pgdetails";
-        String selectQuery = "SELECT * FROM "+tableName;
-        sqLiteDatabase1 = myHelper.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase1.rawQuery(selectQuery, null);
+    public Cursor queryPGDetails(){
+        Cursor cursor = sqLiteDatabase.query("pgdetails", null, null, null, null, null, null, null);
 
-        ArrayList<String> arrayList = new ArrayList<String>();
-        int j = 0;
-
-        if(cursor.moveToFirst()){
-            do{
-                int rent = cursor.getInt(1);
-                String area = cursor.getString(2);
-                String pgname = cursor.getString(3);
-                String contact = cursor.getString(4);
-                String desc = cursor.getString(5);
-
-                String data1 = ""+rent+"/"+area+"/"+pgname+"/"+contact+"/"+desc;
-                arrayList.add(data1);
-
-            }while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        return arrayList;
+        return cursor;
     }
 
     public void close(){
@@ -72,8 +68,7 @@ public class PGDatabase {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("create table pgdetails(_id integer primary key, pgrent integer, pgarea text, " +
-                        "pgname text, pgcontact text, pgdesc text);");
+            db.execSQL("create table pgdetails(_id integer primary key, advertisername text, pgname text, contact float, pgcity text, pgarea text, pgrent integer, negotiable text, gender text, typeoffood text, moredetails text, dateofposting date, image1 blob, image2 blob, latitude text, longitude text);");
         }
 
         @Override
